@@ -62,3 +62,10 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+
+#virtual
+venv
+
+#ide
+.vscode
