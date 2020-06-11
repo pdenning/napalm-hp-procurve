@@ -14,7 +14,7 @@ from napalm_procurve import procurve
 def set_device_parameters(request):
     """Set up the class."""
     def fin():
-        request.cls.device.close()
+        request.cls.driver.close()
     request.addfinalizer(fin)
 
     request.cls.driver = procurve.ProcurveDriver
@@ -47,6 +47,9 @@ class PatchedProcurveDriver(procurve.ProcurveDriver):
         }
 
     def open(self):
+        pass
+
+    def close(self):
         pass
 
 

@@ -32,6 +32,7 @@ from napalm.base.exceptions import (
 
 import napalm.base.constants as C
 import napalm.base.helpers
+from napalm.base.netmiko_helpers import netmiko_args
 
 
 class ProcurveDriver(NetworkDriver):
@@ -57,32 +58,14 @@ class ProcurveDriver(NetworkDriver):
         self.username = username
         self.password = password
         self.timeout = timeout
+        
 
-        # Netmiko possible arguments
-        netmiko_argument_map = {
-            'port': None,
-            'secret': '',
-            'verbose': False,
-            'keepalive': 30,
-            'global_delay_factor': 1,
-            'use_keys': False,
-            'key_file': None,
-            'ssh_strict': False,
-            'system_host_keys': False,
-            'alt_host_keys': False,
-            'alt_key_file': '',
-            'ssh_config_file': None,
-        }
+        netmiko_keepalive = optional_args.get('keepalive', 30)
 
-        # Build dict of any optional Netmiko args
-        self.netmiko_optional_args = {}
-        for k, v in netmiko_argument_map.items():
-            try:
-                self.netmiko_optional_args[k] = optional_args[k]
-            except KeyError:
-                pass
-        self.global_delay_factor = optional_args.get('global_delay_factor', 1)
-        self.port = optional_args.get('port', 22)
+        self.netmiko_optional_args = netmiko_args(optional_args)
+        self.netmiko_optional_args.setdefault('port', 22)
+        self.netmiko_optional_args.setdefault('keepalive', netmiko_keepalive)
+    
 
         self.device = None
         self.config_replace = False
